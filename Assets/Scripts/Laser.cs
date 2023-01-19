@@ -16,18 +16,24 @@ public class Laser : MonoBehaviour
         Vector3 dir = transform.right;
         Vector3 pos = transform.position + offset * dir;
         points[0] = pos;
+        bool bouncing = true;
         for (int i = 1; i <= bounces; i++)
         {
-            RaycastHit2D ray = Physics2D.Raycast(pos + 0.01f * dir, dir);
-            if (ray.collider != null)
+            if (bouncing)
             {
-                pos = ray.point;
-                points[i] = pos;
-                dir = ray.normal;
-            } else
-            {
-                points[i] = transform.position + dir * 1000f;
+                RaycastHit2D ray = Physics2D.Raycast(pos + 0.01f * dir, dir);
+                if (ray.collider != null)
+                {
+                    pos = ray.point;
+                    dir = ray.normal;
+                }
+                else
+                {
+                    pos = transform.position + dir * 1000f;
+                    bouncing = false;
+                }
             }
+            points[i] = pos;
         }
 
         lineRenderer.positionCount = bounces;
