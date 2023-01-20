@@ -26,15 +26,15 @@ public class Laser : MonoBehaviour
         {
             if (bouncing)
             {
-                RaycastHit2D ray = Physics2D.Raycast(pos + 0.01f * dir, dir);
+                RaycastHit2D ray = Physics2D.Raycast(pos + dir * 0.01f, dir);
                 if (ray.collider != null)
                 {
                     pos = ray.point;
-                    dir = dir - 2f * (Vector3.Dot(dir, ray.normal)) * (Vector3)ray.normal;
+                    dir = dir - 2f * Vector3.Dot(dir, ray.normal) * (Vector3)ray.normal;
                 }
                 else
                 {
-                    pos = transform.position + dir * 1000f;
+                    pos = pos + dir * 1000f;
                     bouncing = false;
                 }
             }
