@@ -4,14 +4,19 @@ using UnityEngine;
 
 public class Laser : MonoBehaviour
 {
-    public int bounces = 3;
+    public static int bounces = 10;
     public float offset = 0;
     Vector3[] points;
     [SerializeField] LineRenderer lineRenderer;
 
+    void Start()
+    {
+        transform.eulerAngles = new Vector3(0, 0, Random.Range(0, 6)*60);
+    }
+
     void FixedUpdate()
     {
-        transform.right =  (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - (Vector2)transform.position;
+        //transform.right = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - (Vector2)transform.position;
         points = new Vector3[bounces+1];
         Vector3 dir = transform.right;
         Vector3 pos = transform.position + offset * dir;
@@ -25,7 +30,7 @@ public class Laser : MonoBehaviour
                 if (ray.collider != null)
                 {
                     pos = ray.point;
-                    dir = ray.normal;
+                    dir = dir - 2f * (Vector3.Dot(dir, ray.normal)) * (Vector3)ray.normal;
                 }
                 else
                 {
