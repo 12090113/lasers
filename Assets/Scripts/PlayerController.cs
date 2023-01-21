@@ -6,6 +6,7 @@ using UnityEngine.Tilemaps;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] Controls input;
     [SerializeField] Tilemap tilemap;
     [SerializeField] private float speed = 4f;
     private Vector2 movementInput;
@@ -13,13 +14,24 @@ public class PlayerController : MonoBehaviour
     private Vector3 newpos;
     private float t = 0f;
 
+    void Awake()
+    {
+        input = new Controls();
+    }
+    private void OnEnable()
+    {
+        input.Player.Movement.Enable();
+    }
+
+    private void OnDisable()
+    {
+        input.Player.Movement.Disable();
+    }
+
     //bool hasMoved;
     void Update()
     {
-        var gamepad = Gamepad.current;
-        if (gamepad == null)
-            return; // No gamepad connected.
-        movementInput = gamepad.leftStick.ReadValue();
+        movementInput = input.Player.Movement.ReadValue<Vector2>();
 
         if (t > 1f)
         {
@@ -31,13 +43,14 @@ public class PlayerController : MonoBehaviour
             t += Time.deltaTime * speed;
         } else if (movementInput.magnitude > .5f)
         {
+            if (movementInput.y == 0f) movementInput.y = movementInput.x * 0.1f;
             GetMovementDirection();
         }
     }
 
     public void GetMovementDirection()
     {
-        Vector3Int newtile = tilemap.WorldToCell(transform.position + Vector3.Normalize(movementInput));
+        Vector3Int newtile = tilemap.WorldToCell(transform.position + Vector3.Normalize(movementInput) * .5f);
         if (tilemap.GetTile(newtile) == null)
         {
             oldpos = transform.position;
