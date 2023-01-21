@@ -16,7 +16,6 @@ public class Laser : MonoBehaviour
 
     void FixedUpdate()
     {
-        //transform.right = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - (Vector2)transform.position;
         points = new Vector3[bounces+1];
         Vector3 dir = transform.right;
         Vector3 pos = transform.position + offset * dir;
@@ -34,6 +33,7 @@ public class Laser : MonoBehaviour
                 }
                 else
                 {
+                    if (ray.collider.tag == "Reflective")
                     pos = pos + dir * 1000f;
                     bouncing = false;
                 }
