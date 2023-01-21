@@ -30,10 +30,13 @@ public class Laser : MonoBehaviour
                 {
                     pos = ray.point;
                     dir = dir - 2f * Vector3.Dot(dir, ray.normal) * (Vector3)ray.normal;
+                    if (ray.collider.tag != "Reflective")
+                    {
+                        bouncing = false;
+                    }
                 }
                 else
                 {
-                    if (ray.collider.tag == "Reflective")
                     pos = pos + dir * 1000f;
                     bouncing = false;
                 }
