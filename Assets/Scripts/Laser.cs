@@ -44,11 +44,11 @@ public class Laser : MonoBehaviour
             points[i] = pos;
         }
 
-        lineRenderer.positionCount = bounces * 10;
+        lineRenderer.positionCount = bounces * 100;
         lineRenderer.SetPositions(Generate_Points(points));
     }
 
-    Vector3[] Generate_Points(Vector3[] keyPoints, int segments = 10)
+    Vector3[] Generate_Points(Vector3[] keyPoints, int segments = 100)
     {
         Vector3[] Points = new Vector3[(keyPoints.Length - 1) * segments + keyPoints.Length];
         for (int i = 1; i < keyPoints.Length; i++)
