@@ -10,20 +10,11 @@ public class PlayerController : MonoBehaviour
     private Vector3 oldpos;
     private Vector3 newpos;
     private float t = 0f;
-    /*
-    void Awake()
-    {
-        input = new Controls();
-    }
-    private void OnEnable()
-    {
-        input.Player.Movement.Enable();
-    }
 
-    private void OnDisable()
+    private void Start()
     {
-        input.Player.Movement.Disable();
-    }*/
+        tilemap = FindObjectOfType<Tilemap>();
+    }
 
     public void OnMove(InputAction.CallbackContext ctx)
     {
