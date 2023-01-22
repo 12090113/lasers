@@ -1,19 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] Controls input;
     [SerializeField] Tilemap tilemap;
     [SerializeField] private float speed = 4f;
     private Vector2 movementInput;
     private Vector3 oldpos;
     private Vector3 newpos;
     private float t = 0f;
-
+    /*
     void Awake()
     {
         input = new Controls();
@@ -26,12 +23,16 @@ public class PlayerController : MonoBehaviour
     private void OnDisable()
     {
         input.Player.Movement.Disable();
+    }*/
+
+    public void OnMove(InputAction.CallbackContext ctx)
+    {
+        Debug.Log("Moved");
+        movementInput = ctx.ReadValue<Vector2>();
     }
 
-    //bool hasMoved;
     void Update()
     {
-        movementInput = input.Player.Movement.ReadValue<Vector2>();
 
         if (t > 1f)
         {
