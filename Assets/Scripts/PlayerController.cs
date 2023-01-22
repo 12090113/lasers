@@ -18,7 +18,6 @@ public class PlayerController : MonoBehaviour
 
     public void OnMove(InputAction.CallbackContext ctx)
     {
-        Debug.Log("Moved");
         movementInput = ctx.ReadValue<Vector2>();
     }
 
@@ -40,7 +39,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void GetMovementDirection()
+    private void GetMovementDirection()
     {
         Vector3Int newtile = tilemap.WorldToCell(transform.position + Vector3.Normalize(movementInput) * .5f);
         if (tilemap.GetTile(newtile) == null)
@@ -49,5 +48,10 @@ public class PlayerController : MonoBehaviour
             newpos = tilemap.CellToWorld(newtile);
             t += Time.deltaTime * speed;
         }
+    }
+
+    public void SetColor(Color color)
+    {
+        GetComponent<SpriteRenderer>().color = color;
     }
 }
