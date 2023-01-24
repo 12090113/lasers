@@ -3,12 +3,8 @@ using System.Collections.Generic;
 
 public class CameraController : MonoBehaviour
 {
-    public List<PlayerController> players;
-    public float cameraSize = 5f;
-    public float cameraSpeed = 5f;
-    public float zoomSpeed = 5f;
-    public float zoomOutMin = 3f;
-    public float zoomOutMax = 7f;
+    private List<PlayerController> players;
+    [SerializeField] float paddingSize = 5f, cameraSpeed = 5f, zoomSpeed = 5f, zoomOutMin = 3f, zoomOutMax = 7f;
     private Camera mainCamera;
 
     private void Start()
@@ -51,10 +47,10 @@ public class CameraController : MonoBehaviour
             maxY = Mathf.Max(maxY, players[i].transform.position.y);
         }
 
-        float width = maxX - minX + cameraSize;
-        float height = maxY - minY + cameraSize;
+        float width = maxX - minX + paddingSize;
+        float height = maxY - minY + paddingSize;
 
-        float orthoSize = Mathf.Max(width * (Screen.height/Screen.width) * 1f, height * 0.5f);
+        float orthoSize = Mathf.Max(width / mainCamera.aspect * .5f, height * 0.5f);
         orthoSize = Mathf.Clamp(orthoSize, zoomOutMin, zoomOutMax);
 
         mainCamera.orthographicSize = Mathf.Lerp(mainCamera.orthographicSize, orthoSize, zoomSpeed * Time.deltaTime);
