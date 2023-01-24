@@ -20,4 +20,9 @@ public class PlayerManager : MonoBehaviour
     {
         players.Remove(playerInput.GetComponent<PlayerController>());
     }
+
+    public List<PlayerController> GetPlayers()
+    {
+        return players;
+    }
 }
