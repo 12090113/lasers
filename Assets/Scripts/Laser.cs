@@ -1,19 +1,27 @@
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class Laser : MonoBehaviour
 {
     public static int bounces = 10;
-    public float offset = 0;
+    [SerializeField] float offset = 0;
     Vector3[] points;
     [SerializeField] LineRenderer lineRenderer;
+    private int bounced = 0;
+    private Tilemap tilemap;
+    private float destroyTimer = 0;
+    float destructionTime = 1f;
 
     void Start()
     {
         transform.eulerAngles = new Vector3(0, 0, Random.Range(0, 6)*60);
+        tilemap = FindObjectOfType<Tilemap>();
     }
 
     void FixedUpdate()
     {
+        destroyTimer += Time.fixedDeltaTime;
         points = new Vector3[bounces+1];
         Vector3 dir = transform.right;
         Vector3 pos = transform.position + offset * dir;
@@ -31,25 +39,33 @@ public class Laser : MonoBehaviour
                     if (ray.collider.tag != "Reflective")
                     {
                         bouncing = false;
+                        bounced = i + 1;
+                        if (destroyTimer > destructionTime)
+                        {
+                            tilemap.SetTile(tilemap.WorldToCell(pos - (Vector3)ray.normal * 0.1f), null);
+                            destroyTimer = 0;
+                        }
                     }
                 }
                 else
                 {
                     pos = pos + dir * 1000f;
                     bouncing = false;
+                    bounced = i + 1;
                 }
             }
             points[i] = pos;
         }
-
-        lineRenderer.positionCount = bounces * 100;
-        lineRenderer.SetPositions(Generate_Points(points));
+        Vector3[] positions = Generate_Points(points, bounced, 100);
+        lineRenderer.positionCount = positions.Length;
+        lineRenderer.SetPositions(positions);
     }
 
-    Vector3[] Generate_Points(Vector3[] keyPoints, int segments = 100)
+    Vector3[] Generate_Points(Vector3[] keyPoints, int length = 0, int segments = 100)
     {
-        Vector3[] Points = new Vector3[(keyPoints.Length - 1) * segments + keyPoints.Length];
-        for (int i = 1; i < keyPoints.Length; i++)
+        Vector3[] Points = new Vector3[(length - 1) * segments + length];
+        if (length == 0) length = keyPoints.Length;
+        for (int i = 1; i < length; i++)
         {
             Points[(i - 1) * segments + i - 1] = new Vector3(keyPoints[i - 1].x, keyPoints[i - 1].y, 0);
             for (int j = 1; j <= segments; j++)
@@ -62,7 +78,7 @@ public class Laser : MonoBehaviour
                 Points[(i - 1) * segments + j + i - 1] = new Vector3(x + dx * j, y + dy * j, z);
             }
         }
-        Points[(keyPoints.Length - 1) * segments + keyPoints.Length - 1] = new Vector3(keyPoints[keyPoints.Length - 1].x, keyPoints[keyPoints.Length - 1].y, 0);
+        Points[(length - 1) * segments + length - 1] = new Vector3(keyPoints[length - 1].x, keyPoints[length - 1].y, 0);
         return Points;
     }
 }
