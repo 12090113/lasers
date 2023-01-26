@@ -40,7 +40,7 @@ public class Laser : MonoBehaviour
                     {
                         bouncing = false;
                         bounced = i + 1;
-                        if (destroyTimer > destructionTime)
+                        if (destroyTimer > destructionTime && ray.collider.tag != "Indestructible")
                         {
                             tilemap.SetTile(tilemap.WorldToCell(pos - (Vector3)ray.normal * 0.1f), null);
                             destroyTimer = 0;
