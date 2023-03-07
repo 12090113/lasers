@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        tilemap = FindObjectOfType<Tilemap>();
+        tilemap = FindObjectsOfType<Tilemap>()[1];
     }
 
     public void OnMove(InputAction.CallbackContext ctx)
@@ -42,6 +42,8 @@ public class PlayerController : MonoBehaviour
     private void GetMovementDirection()
     {
         Vector3Int newtile = tilemap.WorldToCell(transform.position + Vector3.Normalize(movementInput) * .5f);
+        Vector3 dir = tilemap.CellToWorld(newtile) - transform.position;
+        transform.up = dir;
         if (tilemap.GetTile(newtile) == null)
         {
             oldpos = transform.position;
@@ -53,5 +55,10 @@ public class PlayerController : MonoBehaviour
     public void SetColor(Color color)
     {
         GetComponent<SpriteRenderer>().color = color;
+    }
+    public void Die() 
+    {
+        t = 0f;
+        transform.position = Vector3.zero;
     }
 }
